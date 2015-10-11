@@ -1,0 +1,429 @@
+%% identical to zufriedenheit_studiengang.rnw, but comments removed
+\pagebreak
+
+\section{Beschreibung der Studierenden}
+
+\noindent
+Anzahl Rückmeldungen: \Sexpr{nrow(studiengangsdaten)}
+
+\noindent
+In welchem Semester studieren Sie?
+
+<<echo=FALSE, fig.width=3.5, fig.height=3.3>>=
+suppressPackageStartupMessages(require(ggplot2))
+
+mybreaks <- NULL
+anzahl <- nrow(studiengangsdaten) 
+if (anzahl<5){
+  mybreaks <- seq(from=0, to=anzahl, by=1)
+}else if(anzahl<20){
+  mybreaks <- seq(from=0, to=anzahl, by=2)
+}else if(anzahl<60){
+  mybreaks <- seq(from=0, to=anzahl, by=5)
+}else if(anzahl<100){
+  mybreaks <- seq(from=0, to=anzahl, by=10)
+}else if(anzahl<200){
+  mybreaks <- seq(from=0, to=anzahl, by=20)
+}else if(anzahl<300){
+  mybreaks <- seq(from=0, to=anzahl, by=30)
+}else if(anzahl<400){
+  mybreaks <- seq(from=0, to=anzahl, by=40)
+}else if(anzahl<500){
+  mybreaks <- seq(from=0, to=anzahl, by=50)
+}else if(anzahl<600){
+  mybreaks <- seq(from=0, to=anzahl, by=60)
+}else if(anzahl<700){
+  mybreaks <- seq(from=0, to=anzahl, by=70)
+}else if(anzahl<800){
+  mybreaks <- seq(from=0, to=anzahl, by=80)
+}else if(anzahl<900){
+  mybreaks <- seq(from=0, to=anzahl, by=90)
+}else {
+  mybreaks <- seq(from=0, to=anzahl, by=100)
+}
+collapseString <- "\\\\ \\rule{2cm}{0.4pt}\\\\  "
+
+ggplot(studiengangsdaten,aes(x=G1Q00003)) +
+  scale_x_discrete(drop=FALSE, limits=rev(levels(studiengangsdaten$G1Q00003))) +
+  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  coord_flip() +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=9, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häufigkeit je Antwort") + 
+  xlab("")
+  
+@
+
+
+\pagebreak
+\section{Studiengestaltung}
+
+"Wie zufrieden sind Sie mit ...."
+
+<<echo=FALSE, fig.width=7.8, fig.height=10.2>>=
+
+long <- reshape(studiengangsdaten, dir = "long", varying = 8:18, sep="_", drop = c(1:7, 19:86))
+
+levels(long$G2Q00001) <- gsub("sehr ", "sehr\n ", c(levels(long$G2Q00001)))
+long$time <- factor(long$time, levels=c("SQ002","SQ003","SQ004","SQ005","SQ006","SQ007","SQ008","SQ009","SQ010","SQ011","SQ012"),labels=c(
+  "... dem Berufsfeld- und Praxisbezug der Lehrveranstaltungen?", 
+  "... der inhaltlichen Ausrichtung des Lehrangebots (z.B. Themen)?", 
+  "... den interdisziplinären Bezügen innerhalb des Studiengangs?", 
+  "... dem verwendeten Lehrmaterial?", 
+  "... der didaktischen Vermittlung des Lehrstoffs insgesamt?",  
+  "... den Möglichkeiten der individuellen fachlichen Schwerpunktsetzung\n im Studium/Freiheiten bei der Modulwahl?", 
+  "... den Auswahlmöglichkeiten im Wahlpflichtbereich?", 
+  "... dem Niveau des Lehrangebots?",  
+  "... der zeitlichen Belastung durch Veranstaltungsvor-/nachbereitung\n und Prüfungen?",  
+  "... der Gestaltung des Stundenplans?\n (inkl. Informationen über Verschiebungen; Ausfall)",  
+  "... den Möglichkeiten der internationalen Vernetzung während Ihres Studiums\n (Auslandssemester, Auslandshochschulpartner,Auslandspraktika, etc.)"
+)) 
+
+scale7 <- c("#e6e8f1", "#e6e8f1", "#e6e8f1", "#e6e8f1", "#e6e8f1", "#e6e8f1", "#e6e8f1", "red")
+
+ggplot(long,aes(x=G2Q00001)) +
+  scale_x_discrete(drop=FALSE) +
+  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=7, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häufigkeiten je Antwort") + 
+  xlab("") +
+  facet_wrap( ~ time, ncol=1)
+
+@
+
+\pagebreak
+\section{Bezug zur Wissenschaft}
+"Wie zufrieden sind Sie mit ...."
+
+<<echo=FALSE, fig.width=7.8, fig.height=6.9>>=
+
+long <- reshape(studiengangsdaten, dir = "long", varying = 21:27, sep="_", drop = c(1:20, 28:86))
+
+levels(long$G3Q00001) <- gsub("sehr ", "sehr\n ", c(levels(long$G3Q00001)))
+long$time <- factor(long$time, levels=c("SQ001","SQ009","SQ002","SQ003","SQ004", "SQ006","SQ007"),labels=c(
+"... der Vermittlung von Methoden des wissenschaftlichen Arbeitens?", 
+"... der Schulung von wissenschaftlichem Denken allgemein?",
+"... der Vermittlung von interessantem und überraschendem Wissen?",
+"... der Anregung zur eigenen kritischen Reflexion?",
+"... der Bezugnahme auf zentrale und innovative Forschungsergebnisse?",
+"... der Möglichkeit an Forschung innerhalb der Hochschule teilzunehmen?",
+"... der Anleitung zu selbstständigen Forschungsaufgaben?")) 
+
+ggplot(long,aes(x=G3Q00001)) +
+  scale_x_discrete(drop=FALSE) +
+  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=7, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häufigkeiten je Antwort") + 
+  xlab("") +
+  facet_wrap( ~ time, ncol=1)
+
+@
+
+
+
+
+\pagebreak
+\section{Praxisbezug}
+"Wie zufrieden sind Sie mit ...."
+
+<<echo=FALSE, fig.width=7.8, fig.height=7.9>>=
+
+long <- reshape(studiengangsdaten, dir = "long", varying = 30:37, sep="_", drop = c(1:29, 38:86))
+
+levels(long$G4Q00001) <- gsub("sehr ", "sehr\n ", c(levels(long$G4Q00001)))
+long$time <- factor(long$time, levels=c("SQ001","SQ002","SQ004","SQ003","SQ006", "SQ007","SQ010","SQ011"),labels=c(
+"... der Möglichkeit Einblicke in die Praxis zu gewinnen? (z.B. über Praktika, Projekte usw.)",
+"... dem Verhältnis von Praxiselementen und theoretischen Inhalten?",
+"... der Unterstützung bei der Suche nach Praktikumsstellen?",
+"... der Qualität der Praxiselemente?",
+"... der Organisation der Praxisphase(n)? (angemessene Dauer, zeitliche Integration in das Studium)",
+"... der Vor- und Nachbereitung der Praxisphase(n)?",
+"... den Stellenangeboten für Praktika auf myPFH (interner Bereich)?",
+"... dem praktische Bezug Ihres Studiengangs?")) 
+
+ggplot(long,aes(x=G4Q00001)) +
+  scale_x_discrete(drop=FALSE) +
+  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=7, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häufigkeiten je Antwort") + 
+  xlab("") +
+  facet_wrap( ~ time, ncol=1)
+
+@
+
+
+
+
+
+\pagebreak
+\section{Bezug zum Arbeitsmarkt}
+"Wie zufrieden sind Sie mit ...."
+
+<<echo=FALSE, fig.width=7.8, fig.height=9.0>>=
+
+long <- reshape(studiengangsdaten, dir = "long", varying = 40:48, sep="_", drop = c(1:39, 49:86))
+
+levels(long$G5Q00001) <- gsub("sehr ", "sehr\n ", c(levels(long$G5Q00001)))
+long$time <- factor(long$time, levels=c("SQ001","SQ003","SQ002","SQ004", "SQ005", "SQ006", "SQ007","SQ008","SQ009"),labels=c(
+"... der Berufsrelevanz der vermittelten Kompetenzen?",
+"... der Berufsrelevanz des angestrebten Abschlusses?",
+"... der Unterstützung beim Übergang in den Beruf? (Career Services etc.)",
+"... den Informationsveranstaltungen über Berufsfelder?\n (Jobbörsen, Gastvorträge etc.)", 
+"... den Rahmenbedingungen, die Sie an der PFH zur Ihrer\n Persönlichkeitsentwicklung vorfinden? (Soft Skills, ehrenamtlichen Engagement,\n Sprachtraining, Projektarbeit etc.)",
+".. dem Fördern sozialer Kompetenzen? (Softskilltrainigs etc.)",
+"...dem Fördern von Fremdsprachenkompetenzen?",
+".. dem Fördern von IT-Kompetenzen?",
+"... dem Fördern von Projektmanagement-Konzepten?"
+  )) 
+
+ggplot(long,aes(x=G5Q00001)) +
+  scale_x_discrete(drop=FALSE) +
+  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=7, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häufigkeiten je Antwort") + 
+  xlab("") +
+  facet_wrap( ~ time, ncol=1)
+
+@
+
+
+
+
+\pagebreak
+\section{Beratung und Betreuung}
+"Wie zufrieden sind Sie mit ...."
+
+<<echo=FALSE, fig.width=7.8, fig.height=10.2>>=
+
+long <- reshape(studiengangsdaten, dir = "long", varying = 51:61, sep="_", drop = c(1:50, 62:86))
+
+levels(long$G6Q00001) <- gsub("sehr ", "sehr\n ", c(levels(long$G6Q00001)))
+long$time <- factor(long$time, levels=c("SQ001","SQ002","SQ003","SQ004", "SQ005", "SQ006", "SQ007","SQ009","SQ008","SQ010","SQ011"),labels=c(
+"... dem Verhältnis zwischen Studierenden und Lehrenden?", 
+"... dem Engagement der Lehrenden?",
+"... der Erreichbarkeit der Lehrenden?",
+"... der Qualität der Beratung und Betreuung durch die PFH?\n (Studienservice; Prüfungsamt etc.)", 
+"... Rückmeldungen zu Klausuren, Hausarbeiten, Präsentationen etc.?",
+"... Skripte und Lehrmaterialien?",
+"... der Informationsvielfalt auf myPFH (interner Bereich)?",
+"... der Struktur auf myPFH (interner Bereich)?",
+"... der Vielfalt der Stipendienangebote?",
+"... der Organisation und Betreuung durch das International Office-Team?",
+"... mit den Informationen, die Sie auf der International-Office-Website finden?"
+    )) 
+
+ggplot(long,aes(x=G6Q00001)) +
+  scale_x_discrete(drop=FALSE) +
+  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=7, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häufigkeiten je Antwort") + 
+  xlab("") +
+  facet_wrap( ~ time, ncol=1)
+
+@
+
+
+
+\pagebreak
+\section{Bibliothek}
+"Wie zufrieden sind Sie mit ...."
+
+<<echo=FALSE, fig.width=7.8, fig.height=2.5>>=
+
+long <- reshape(studiengangsdaten, dir = "long", varying = 66:67, sep="_", drop = c(1:65, 68:86))
+
+levels(long$G6Q00006) <- gsub("sehr ", "sehr\n ", c(levels(long$G6Q00006)))
+long$time <- factor(long$time, levels=c("SQ001","SQ002"),labels=c(
+"... dem Umfang der zur Verfügung gestellten Literatur\n (Bibliothek, ebsco, Statistia, SUB)",
+"... der Erreichbarkeit der zur Verfügung gestellten Literatur"
+)) 
+
+ggplot(long,aes(x=G6Q00006)) +
+  scale_x_discrete(drop=FALSE) +
+  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=7, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häufigkeiten je Antwort") + 
+  xlab("") +
+  facet_wrap( ~ time, ncol=1)
+
+@
+
+
+\section{Reflexion}
+"Mit Ihrer Erfahrung als Studierende(r) an der PFH: Würden Sie ..."
+
+<<echo=FALSE, fig.width=3.5, fig.height=3.5>>=
+
+long <- reshape(studiengangsdaten, dir = "long", varying = 69:71, sep="_", drop = c(1:68, 72:86))
+
+levels(long$G7Q00001) <- gsub("sehr ", "sehr\n ", c(levels(long$G7Q00001)))
+long$time <- factor(long$time, levels=c("SQ001","SQ002","SQ003"),labels=c(
+".... den von Ihnen gewählten Studiengang\n noch einmal wählen?",
+"... noch einmal ein Studium an der\n PFH Private Hochschule Göttingen wählen?",
+"... sagen, dass Sie an Ihrer\n Wunschhochschule studieren?"
+  )) 
+
+ggplot(long,aes(x=G7Q00001)) +
+  scale_x_discrete(drop=FALSE) +
+  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=7, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häufigkeiten je Antwort") + 
+  xlab("") +
+  facet_wrap( ~ time, ncol=1)
+
+@
+
+
+
+\subsection{Würden Sie Ihren Bekannten, Freund/-innen oder Kolleg/-innen die PFH weiterempfehlen?}
+
+<<echo=FALSE, fig.width=5.5, fig.height=1.3>>=
+
+ggplot(studiengangsdaten,aes(x=G7Q00004)) +
+  scale_x_discrete(drop=FALSE) +
+  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=7, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häuf. je Ant.") + 
+  xlab("")
+  
+@
+
+
+
+\pagebreak
+\section{Studienabbruch}
+\subsection{Haben Sie einen Abbruch des Studiums schon einmal ernsthaft in Betracht gezogen?}
+
+<<echo=FALSE, fig.width=3.5, fig.height=1.3>>=
+
+ggplot(studiengangsdaten,aes(x=G8Q00001)) +
+  scale_x_discrete(drop=FALSE) +
+  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=7, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häuf. je Ant.") + 
+  xlab("")
+  
+@
+
+\subsection{Warum haben Sie schon einmal ernsthaft einen Studienabbruch in Betracht gezogen?}
+
+<<echo=FALSE, fig.width=3.5, fig.height=2.6>>=
+
+long <- reshape(studiengangsdaten, dir = "long", varying = 77:84, sep="_", drop = c(1:76, 85:86))
+# long <- na.omit(long)
+levels(long$G8Q00002) <- gsub("sehr ", "sehr\n ", c(levels(long$G8Q00002)))
+long$time <- factor(long$time, levels=c("1","2","3", "4", "5", "6", "7", "8"),labels=c(
+"Vorstellung der Studieninhalte\n wurden nicht erfüllt",
+"Studienunlust",
+"Persönliche Gründe",
+"Finanzielle Schwierigkeiten",
+"Überlastung",
+"Schwierigkeiten mit dem\n Lehrpersonal oder Kommilitonen",
+"Schlechte Noten",
+"Jobangebot erhalten"
+    )) 
+
+anzahl <- data.frame(table(long[,1:2], exclude = "Nicht Gewählt"))
+
+ggplot(anzahl,aes(x=time, y=Freq)) +
+  scale_x_discrete(limits = rev(levels(anzahl$time))) +
+#  scale_y_continuous(breaks=mybreaks) +
+  scale_fill_discrete(drop=FALSE) + 
+  geom_bar(stat = "identity", fill="#66B2FF", colour="black") +
+  coord_flip() +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
+    axis.text.y = element_text(size=9, colour = "black"),
+    axis.title=element_text(size=9)
+    ) +
+  ylab("Häufigkeiten je Antwort") + 
+  xlab("") 
+
+@
+
+
+\noindent
+Sonstige Gründe:
+
+<<include=FALSE>>=
+out2 = NULL
+
+kommentare <- NULL
+kommentare <- studiengangsdaten$G8Q00002_other[!is.na(studiengangsdaten$G8Q00002_other)]
+
+if (length(kommentare)>0){
+  # remove superfluous line feeds on start and end
+  kommentare <- gsub("^\n+", "", kommentare)
+  kommentare <- gsub("\n+$", "", kommentare)
+  # replace % sign
+  kommentare <- gsub("%", "\\%", kommentare, fixed=TRUE)
+  kommentare <- gsub("&", "\\&", kommentare, fixed=TRUE)
+  kommentare <- gsub("\n", "\\\\\\\\ ", kommentare)
+  kommentare <- gsub('\"', "''", kommentare, fixed=TRUE)
+
+    out2 <- c(paste(kommentare, collapse = collapseString))
+}else{
+  out2 <- c("keine")
+}
+@
+\Sexpr{paste(out2, collapse = collapseString)}
+

@@ -1,0 +1,142 @@
+\documentclass{article}
+\usepackage[german]{babel}
+\usepackage[scaled]{helvet}
+\renewcommand\familydefault{\sfdefault} 
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+%\renewcommand{\familydefault}{\sfdefault}
+\geometry{a4paper, total={210mm,297mm}, left=20mm, right=20mm, top=15mm, tmargin=39mm, headheight=70mm, bottom=20mm}
+\pagestyle{fancy}
+\fancyhead{} 
+\fancyhead[RO,RE]{\includegraphics{img/pfh_logo3.png}}
+\fancyfoot{} 
+\fancyfoot[RO,RE]{\thepage}
+\thispagestyle{fancy}
+
+<<include=FALSE>>=
+# config fake for testing
+#studiengang_id <- "BScPsy"
+#inFile <- list()
+#inFile$datapath <- "../aa_zuF.csv"
+#datum <- "heute"
+
+# provide programme label for report and type 
+# (Campus vs Fern; more types possible if required, e.g., Fern2016)
+ studiengaenge <- list(AlleCampus = c("Alle Campusstudiengänge", "Campus"),
+                      BScGM = c('B.Sc. General Management', "Campus"),
+                      BScBA = c("B.Sc. Business Administration", "Campus"),
+                      BScO = c("B.Sc. Orthobionik", "Campus"),
+                      BScV = c("B.Sc. Verbundwerkstoffe/Composites", "Campus"),
+                      MScGM = c("M.Sc. General Management", "Campus"),
+                      MScMO = c("M.Sc. Medizinische Orthobionik", "Campus"),
+                      MScV = c("M.Sc. Verbundwerkstoffe/Composites", "Campus"),
+                      AlleFern = c("Alle Fernstudiengänge", "Fern"),
+                      AlleFernBWL = c("Alle Fernstudiengänge im Bereich BWL", "Fern"),
+                      BABWL = c("B.A. Betriebswirtschaftslehre", "Fern"),
+                      MABWL = c("M.A. Betriebswirtschaftslehre", "Fern"),
+                      MAAM = c("M.A. Advanced Management", "Fern"),
+                      MBA = c("Business Administration (MBA)", "Fern"),
+                      AlleFernPsy = c("Alle Fernstudiengänge im Bereich Psychologie/Wirtschaftspsychologie", "Fern"),
+                      BScPsy = c("B.Sc.Psychologie", "Fern"),
+                      MScPsy = c("M.Sc. Psychologie", "Fern"),
+                      BAWPsy = c("B.A. Wirtschaftspsychologie", "Fern"),
+                      MAWPsy = c("M.A. Wirtschaftspsychologie", "Fern"),
+                      MAAPsyW = c("M.A. Angewandte Psychologie für die Wirtschaft", "Fern")
+                      )
+# required changes for new programme:
+# add in ui.r; add label and type above; add factor level in syntax
+
+bwlstudiengaenge <- c("BABWL", "MABWL", "MBA", "MAAM")
+psystudiengaenge <- c("BScPsy", "BAWPsy", "MAWPsy", "MScPsy", "MAAPsyW")
+  
+studiengang <- studiengaenge[[studiengang_id]][1]
+studiengang_type <- studiengaenge[[studiengang_id]][2]
+
+studiengang_type_label <- ""
+if((studiengaenge[[studiengang_id]][2] == "Fern") && !(studiengang_id=="AlleFern") && !(studiengang_id=="AlleFernBWL") && !(studiengang_id=="AlleFernPsy")){
+  studiengang_type_label <- "Fernstudiengang\\\\ "
+}
+if((studiengaenge[[studiengang_id]][2] == "Campus") && !(studiengang_id=="AlleCampus")){
+  studiengang_type_label <- "Campusstudiengang\\\\ "
+}
+
+@
+
+\begin{document}
+\title{Zufriedenheitsanalyse der PFH\\ \Sexpr{studiengang_type_label}
+\Sexpr{studiengang}
+}
+\date{
+\Sexpr{datum}
+}
+
+\author{}
+\maketitle
+\renewcommand*\contentsname{}
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+<<run-all, include=FALSE>>=
+# read data
+data <-
+      read.csv(
+        inFile$datapath, quote = "'\"", na.strings = c("", "\"\""), stringsAsFactors =
+          FALSE, encoding = "UTF-8"
+      )
+
+# label data, different labels for Campus and Fern
+if (studiengang_type == "Campus"){
+  source("generic_zufriedenheit_syntax_file.r", encoding = "UTF-8", local = TRUE)
+}else{
+    source("generic_zufriedenheit_fern_syntax_file.r", encoding = "UTF-8", local = TRUE)
+}
+
+
+# select complete answers only
+data <- data[!is.na(data$submitdate),]
+
+# ready to knit
+library(knitr)
+out = NULL
+
+# separate sheets for AlleCampus vs individual programmes etc.
+if(studiengang_id=="AlleCampus"){
+  studiengangsdaten <- data
+  out = c(out,  knit_child('zufriedenheit_alle.rnw'))
+}else if(studiengang_id=="AlleFern"){
+  studiengangsdaten <- data
+  out = c(out,  knit_child('zufriedenheit_alle_fern.rnw'))
+}else if(studiengang_id=="AlleFernBWL"){
+  studiengangsdaten <- data[data$a1 %in% bwlstudiengaenge,] 
+  out = c(out,  knit_child('zufriedenheit_alle_fern.rnw'))
+}else if(studiengang_id=="AlleFernPsy"){
+  studiengangsdaten <- data[data$a1 %in% psystudiengaenge,] 
+  out = c(out,  knit_child('zufriedenheit_alle_fern.rnw'))
+}else if(studiengang_type=="Campus"){
+  studiengangsdaten <- data[data$G1Q00002==studiengang_id,] 
+  if(nrow(studiengangsdaten)==0){
+    out = c(out,  knit_child('keineAntworten.rnw'))
+  }else{
+    out = c(out,  knit_child('zufriedenheit_studiengang.rnw'))
+  }
+}else if(studiengang_type=="Fern"){
+  studiengangsdaten <- data[data$a1==studiengang_id,] 
+  if(nrow(studiengangsdaten)==0){
+    out = c(out,  knit_child('keineAntworten.rnw'))
+  }else{
+    out = c(out,  knit_child('zufriedenheit_studiengang_fern.rnw'))
+  }
+}else{
+  if(nrow(studiengangsdaten)==0){
+    out = c(out,  knit_child('keineAntworten.rnw'))
+  }else{
+    out = c(out,  knit_child('zufriedenheit_studiengang_fern.rnw'))
+  }
+}
+
+@
+
+\Sexpr{paste(out, collapse = '\n ')}
+\end{document}

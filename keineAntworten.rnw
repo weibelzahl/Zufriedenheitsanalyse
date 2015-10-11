@@ -1,0 +1,9 @@
+%\pagebreak
+
+%\section{\Sexpr{studiengang}}
+
+\noindent
+Anzahl Rückmeldungen: \Sexpr{nrow(studiengangsdaten)}
+
+\noindent
+Für diesen Studiengang liegen keine Antworten vor.
