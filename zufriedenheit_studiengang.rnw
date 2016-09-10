@@ -28,6 +28,7 @@ if (anzahl<5){
 
 # horizontal rule to appear between studnt comments
 collapseString <- "\\\\ \\rule{2cm}{0.4pt}\\\\  "
+collapseStringHtml <- "<br/> \n "
 
 ggplot(studiengangsdaten,aes(x=G1Q00003)) +
   scale_x_discrete(drop=FALSE, limits=rev(levels(studiengangsdaten$G1Q00003))) +
@@ -124,6 +125,7 @@ kommentare <- NULL
 kommentare <- studiengangsdaten$G2Q00003[!is.na(studiengangsdaten$G2Q00003)]
 
 if (length(kommentare)>0){
+
   # remove superfluous line feeds on start and end
   kommentare <- gsub("^\n+", "", kommentare)
   kommentare <- gsub("\n+$", "", kommentare)

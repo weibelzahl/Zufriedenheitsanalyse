@@ -43,14 +43,18 @@ if (anzahl<5){
   mybreaks <- seq(from=0, to=anzahl, by=100)
 }
 
-# horizontal rule to appear between studnt comments
+# horizontal rule to appear between student comments
 collapseString <- "\\\\ \\rule{2cm}{0.4pt}\\\\  "
+#write.csv(studiengangsdaten[, "a4"], file = "logger.csv")
+
+levels(studiengangsdaten$a4) <- c(levels(studiengangsdaten$a4), "keine Angabe")
+studiengangsdaten$a4[is.na(studiengangsdaten$a4)] <- "keine Angabe"
 
 ggplot(studiengangsdaten,aes(x=a4)) +
   scale_x_discrete(drop=FALSE, limits=rev(levels(studiengangsdaten$a4))) +
 #  scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   coord_flip() +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
@@ -67,11 +71,14 @@ Wie alt sind Sie?
 
 <<echo=FALSE, fig.width=3.5, fig.height=1.5>>=
 
+levels(studiengangsdaten$a2) <- c(levels(studiengangsdaten$a2), "keine Angabe")
+studiengangsdaten$a2[is.na(studiengangsdaten$a2)] <- "keine Angabe"
+
 ggplot(studiengangsdaten,aes(x=a2)) +
   scale_x_discrete(drop=FALSE, limits=rev(levels(studiengangsdaten$a2))) +
 #  scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   coord_flip() +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
@@ -95,7 +102,7 @@ ggplot(df,aes(x=a1)) +
   scale_x_discrete(drop=FALSE, limits=rev(levels(df$a1))) +
 #  scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   coord_flip() +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
@@ -112,12 +119,15 @@ ggplot(df,aes(x=a1)) +
 Welches ist Ihr Studienstandort?
 
 <<echo=FALSE, fig.width=3.5, fig.height=3.3>>=
+levels(studiengangsdaten$a3) <- c(levels(studiengangsdaten$a3), "keine Angabe")
+studiengangsdaten$a3[is.na(studiengangsdaten$a3)] <- "keine Angabe"
+
 
 ggplot(studiengangsdaten,aes(x=a3)) +
   scale_x_discrete(drop=FALSE, limits=rev(levels(studiengangsdaten$a3))) +
 #  scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   coord_flip() +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
@@ -133,6 +143,9 @@ ggplot(studiengangsdaten,aes(x=a3)) +
 Anzahl Rückmeldungen pro Studienort und Semester
 
 <<echo=FALSE, fig.width=5.8, fig.height=3.3>>=
+
+# levels(studiengangsdaten$a3) <- gsub("keine ", "keine\n ", c(levels(studiengangsdaten$a3)))
+levels(studiengangsdaten$a4) <- gsub("keine Angabe", "k. A.", c(levels(studiengangsdaten$a4)))
 
 anzahl <- data.frame(table(studiengangsdaten$a3, studiengangsdaten$a4))
 levels(anzahl$Var2) <- gsub(" Semester", "", levels(anzahl$Var2))
@@ -154,12 +167,14 @@ geom_text(aes(label = Freq, size=3), size=3)
 Studieren Sie in der regulären oder in der verkürzten Studienzeitvariante?
 
 <<echo=FALSE, fig.width=3.5, fig.height=1.2>>=
+levels(studiengangsdaten$a5) <- c(levels(studiengangsdaten$a5), "keine Angabe")
+studiengangsdaten$a5[is.na(studiengangsdaten$a5)] <- "keine Angabe"
 
 ggplot(studiengangsdaten,aes(x=a5)) +
   scale_x_discrete(drop=FALSE, limits=rev(levels(studiengangsdaten$a5))) +
 #  scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   coord_flip() +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
@@ -176,12 +191,15 @@ ggplot(studiengangsdaten,aes(x=a5)) +
 Sind Sie an der PFH als Erstsemester gestartet oder als Quereinsteiger?
 
 <<echo=FALSE, fig.width=3.5, fig.height=1.2>>=
+levels(studiengangsdaten$a6) <- c(levels(studiengangsdaten$a6), "keine Angabe")
+studiengangsdaten$a6[is.na(studiengangsdaten$a6)] <- "keine Angabe"
+
 
 ggplot(studiengangsdaten,aes(x=a6)) +
   scale_x_discrete(drop=FALSE, limits=rev(levels(studiengangsdaten$a6))) +
 #  scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   coord_flip() +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
@@ -202,10 +220,13 @@ ggplot(studiengangsdaten,aes(x=a6)) +
 <<echo=FALSE, fig.width=7.8, fig.height=10.2>>=
 
 # reshape sequence of variables into long format
-long <- reshape(studiengangsdaten, dir = "long", varying = 38:45, sep="_", drop = c(1:37, 46:60))
+long <- reshape(studiengangsdaten, dir = "long", varying = 11:19, sep="_", drop = c(1:10, 20:61))
 
 levels(long$c1) <- gsub("sehr ", "sehr\n ", c(levels(long$c1)))
-long$time <- factor(long$time, levels=c("1","2","3","4","5","6","7","8"), labels=c(
+levels(long$c1) <- c(levels(long$c1), "keine Angabe")
+long$c1[is.na(long$c1)] <- "keine Angabe"
+
+long$time <- factor(long$time, levels=c("1","2","3","4","5","6","7","8","9"), labels=c(
   "... der didaktischen Vermittlung des Lehrstoffs insgesamt?",	
   "... der Qualität der verwendeten Fernlehrbriefen?",
   "... den angebotenen Online-Veranstaltungen?",
@@ -213,14 +234,15 @@ long$time <- factor(long$time, levels=c("1","2","3","4","5","6","7","8"), labels
   "... dem zusätzlichen Lehrmaterial?",
   "... den interdisziplinären Bezügen innerhalb des Lehrangebots\n (insb. zwischen verschiedenen Lehrveranstaltungen)?",
   "... den Möglichkeiten der individuellen fachlichen Schwerpunktsetzung\n im Studium / Freiheiten bei der Modulwahl?",
-  "... der Unterstützung des Lernens durch elektronische Medien\n (z.B. Speed-Learnings, Videos)"
+  "... der Unterstützung des Lernens durch elektronische Medien\n (z.B. Speed-Learnings, Videos)",
+  "... der Kommunikationsplattform PFHnet?"
 )) 
 
 ggplot(long,aes(x=c1)) +
   scale_x_discrete(drop=FALSE) +
   scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
     axis.text.y = element_text(size=7, colour = "black"),
@@ -239,9 +261,12 @@ ggplot(long,aes(x=c1)) +
 
 <<echo=FALSE, fig.width=7.8, fig.height=3.7>>=
 
-long <- reshape(studiengangsdaten, dir = "long", varying = 49:52, sep="_", drop = c(1:48, 53:60))
+long <- reshape(studiengangsdaten, dir = "long", varying = 23:26, sep="_", drop = c(1:22, 27:61))
 
 levels(long$e1) <- gsub("sehr ", "sehr\n ", c(levels(long$e1)))
+levels(long$e1) <- c(levels(long$e1), "keine Angabe")
+long$e1[is.na(long$e1)] <- "keine Angabe"
+
 long$time <- factor(long$time, levels=c("1","2","3","4"),labels=c(
 "... der Vermittlung von Methoden des wissenschaftlichen Arbeitens?", 
 "... der Anregung zur eigenen kritischen Reflexion?",
@@ -253,7 +278,7 @@ ggplot(long,aes(x=e1)) +
   scale_x_discrete(drop=FALSE) +
   scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
     axis.text.y = element_text(size=7, colour = "black"),
@@ -273,11 +298,14 @@ ggplot(long,aes(x=e1)) +
 
 <<echo=FALSE, fig.width=7.8, fig.height=3.2>>=
 
-long <- reshape(studiengangsdaten, dir = "long", varying = 55:57, sep="_", drop = c(1:54, 58:60))
+long <- reshape(studiengangsdaten, dir = "long", varying = 29:31, sep="_", drop = c(1:28, 32:61))
 
 levels(long$g1) <- gsub("sehr ", "sehr\n ", c(levels(long$g1)))
+levels(long$g1) <- c(levels(long$g1), "keine Angabe")
+long$g1[is.na(long$g1)] <- "keine Angabe"
+
 long$time <- factor(long$time, levels=c("1","2","5"), labels=c(
-"... dem praktische Bezug Ihres Studiengangs?",
+"... dem praktischen Bezug Ihres Studiengangs?",
 "... der Ausgewogenheit von Praxiselementen und theoretischen Inhalten?",
 "... der Unterstützung beim Finden von Praxis- oder Praktikumsstellen?"
 )) 
@@ -286,7 +314,7 @@ ggplot(long,aes(x=g1)) +
   scale_x_discrete(drop=FALSE) +
   scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
     axis.text.y = element_text(size=7, colour = "black"),
@@ -306,9 +334,12 @@ ggplot(long,aes(x=g1)) +
 
 <<echo=FALSE, fig.width=7.8, fig.height=6.8>>=
 
-long <- reshape(studiengangsdaten, dir = "long", varying = 11:17, sep="_", drop = c(1:10, 18:60))
+long <- reshape(studiengangsdaten, dir = "long", varying = 34:40, sep="_", drop = c(1:33, 41:61))
 
 levels(long$k1) <- gsub("sehr ", "sehr\n ", c(levels(long$k1)))
+levels(long$k1) <- c(levels(long$k1), "keine Angabe")
+long$k1[is.na(long$k1)] <- "keine Angabe"
+
 long$time <- factor(long$time, levels=c("1","2","3","4", "5", "6", "7"), labels=c(
 "... dem Verhältnis zwischen Studierenden und Lehrenden?", 
 "... dem Engagement der Lehrenden?",
@@ -323,7 +354,7 @@ ggplot(long,aes(x=k1)) +
   scale_x_discrete(drop=FALSE) +
   scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
     axis.text.y = element_text(size=7, colour = "black"),
@@ -344,12 +375,14 @@ ggplot(long,aes(x=k1)) +
 \subsection{Haben Sie Ihren Arbeitgeber über Ihr Studium informiert?}
 
 <<echo=FALSE, fig.width=4.5, fig.height=1.3>>=
+levels(studiengangsdaten$m1) <- c(levels(studiengangsdaten$m1), "keine Angabe")
+studiengangsdaten$m1[is.na(studiengangsdaten$m1)] <- "keine Angabe"
 
 ggplot(studiengangsdaten,aes(x=m1)) +
   scale_x_discrete(drop=FALSE) +
   scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
     axis.text.y = element_text(size=7, colour = "black"),
@@ -363,12 +396,14 @@ ggplot(studiengangsdaten,aes(x=m1)) +
 \subsection{Werden Sie von Ihrer Arbeitsstelle im Studium unterstützt?}
 
 <<echo=FALSE, fig.width=3.7, fig.height=1.3>>=
+levels(studiengangsdaten$M2) <- c(levels(studiengangsdaten$M2), "keine Angabe")
+studiengangsdaten$M2[is.na(studiengangsdaten$M2)] <- "keine Angabe"
 
 ggplot(studiengangsdaten,aes(x=M2)) +
   scale_x_discrete(drop=FALSE) +
   scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
     axis.text.y = element_text(size=7, colour = "black"),
@@ -384,7 +419,7 @@ ggplot(studiengangsdaten,aes(x=M2)) +
 
 <<echo=FALSE, fig.width=5.5, fig.height=2.0>>=
 
-long <- reshape(studiengangsdaten, dir = "long", varying = 24:27, sep="_", drop = c(1:23, 28:60))
+long <- reshape(studiengangsdaten, dir = "long", varying = 47:50, sep="_", drop = c(1:46, 51:61))
 # long <- na.omit(long)
 long$time <- factor(long$time, levels=c("1","2","3", "4"),labels=c(
 "finanziell",
@@ -425,11 +460,18 @@ if (length(kommentare)>0){
   # remove superfluous line feeds on start and end
   kommentare <- gsub("^\n+", "", kommentare)
   kommentare <- gsub("\n+$", "", kommentare)
-  # replace % sign
+  # replace % sign and other special characters
   kommentare <- gsub("%", "\\%", kommentare, fixed=TRUE)
   kommentare <- gsub("&", "\\&", kommentare, fixed=TRUE)
   kommentare <- gsub("\n", "\\\\\\\\ ", kommentare)
   kommentare <- gsub('\"', "''", kommentare, fixed=TRUE)
+  kommentare <- gsub('_', "\\_", kommentare, fixed=TRUE)
+  kommentare <- gsub('$', "\\$", kommentare, fixed=TRUE)
+  kommentare <- gsub('{', "\\{", kommentare, fixed=TRUE)
+  kommentare <- gsub('}', "\\}", kommentare, fixed=TRUE)
+  kommentare <- gsub('#', "\\#", kommentare, fixed=TRUE)
+  kommentare <- gsub('\u3002', "", kommentare, fixed=TRUE)
+  kommentare <- gsub('!', "$!$", kommentare, fixed=TRUE)
 
     out2 <- c(paste(kommentare, collapse = collapseString))
 }else{
@@ -444,6 +486,7 @@ if (length(kommentare)>0){
 <<echo=FALSE, fig.width=3.5, fig.height=3.4>>=
 suppressPackageStartupMessages(require(plyr))
 df <- studiengangsdaten[!is.na(studiengangsdaten$m4),]
+df$a5[df$a5 == "keine Angabe"] <- NA
 df <- df[!is.na(df$a5),]
 cdat <- ddply(df, "a5", summarise, rating.mean=round(mean(m4),1), rating.sd=round(sd(m4),1))
 
@@ -474,11 +517,14 @@ verkürzte Variante: Mittelwert \Sexpr{cdat[2,2]} (Standardabweichung: \Sexpr{cd
 
 <<echo=FALSE, fig.width=5.5, fig.height=1.8>>=
 
+levels(studiengangsdaten$m5) <- c(levels(studiengangsdaten$m5), "keine Angabe")
+studiengangsdaten$m5[is.na(studiengangsdaten$m5)] <- "keine Angabe"
+
 ggplot(studiengangsdaten,aes(x=m5)) +
   scale_x_discrete(drop=FALSE, limits=rev(levels(studiengangsdaten$m5))) +
 #  scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   coord_flip() +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
@@ -495,9 +541,12 @@ ggplot(studiengangsdaten,aes(x=m5)) +
 
 <<echo=FALSE, fig.width=3.5, fig.height=3.5>>=
 
-long <- reshape(studiengangsdaten, dir = "long", varying = 31:33, sep="_", drop = c(1:30, 34:60))
+long <- reshape(studiengangsdaten, dir = "long", varying = 54:56, sep="_", drop = c(1:53, 57:61))
 
 levels(long$m6) <- gsub("sehr ", "sehr\n ", c(levels(long$m6)))
+levels(long$m6) <- c(levels(long$m6), "keine Angabe")
+long$m6[is.na(long$m6)] <- "keine Angabe"
+
 long$time <- factor(long$time, levels=c("1","2","3"),labels=c(
 ".... den von Ihnen gewählten Studiengang\n noch einmal wählen?",
 "... noch einmal ein Studium an der\n PFH Private Hochschule Göttingen wählen?",
@@ -508,7 +557,7 @@ ggplot(long,aes(x=m6)) +
   scale_x_discrete(drop=FALSE) +
   scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
     axis.text.y = element_text(size=7, colour = "black"),
@@ -526,11 +575,14 @@ ggplot(long,aes(x=m6)) +
 
 <<echo=FALSE, fig.width=5.5, fig.height=1.3>>=
 
+levels(studiengangsdaten$m9) <- c(levels(studiengangsdaten$m9), "keine Angabe")
+studiengangsdaten$m9[is.na(studiengangsdaten$m9)] <- "keine Angabe"
+
 ggplot(studiengangsdaten,aes(x=m9)) +
   scale_x_discrete(drop=FALSE) +
   scale_y_continuous(breaks=mybreaks) +
   scale_fill_discrete(drop=FALSE) + 
-  geom_bar(stat="bin", fill="#66B2FF", colour="black") +
+  geom_bar(stat="count", fill="#66B2FF", colour="black") +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.5, size=9, colour = "black"), 
     axis.text.y = element_text(size=7, colour = "black"),

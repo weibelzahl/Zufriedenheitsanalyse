@@ -79,6 +79,13 @@ if((studiengaenge[[studiengang_id]][2] == "Campus") && !(studiengang_id=="AlleCa
 \tableofcontents
 
 <<run-all, include=FALSE>>=
+# open html file and create header
+# htmlfile <- file("zufriedenheitsanalyse.html")
+header <- paste0("<html><head><title>Zufriedenheitsanalyse</title></head><body><h1>Zufriedenheitsanalyse der PFH <br/>", studiengang, "</h1>")
+# write(header, htmlfile)
+# htmlfile <- file("zufriedenheitsanalyse.html", open = "at")
+out_html <- header
+
 # read data
 data <-
       read.csv(
@@ -100,7 +107,6 @@ data <- data[!is.na(data$submitdate),]
 # ready to knit
 library(knitr)
 out = NULL
-
 # separate sheets for AlleCampus vs individual programmes etc.
 if(studiengang_id=="AlleCampus"){
   studiengangsdaten <- data
@@ -135,6 +141,11 @@ if(studiengang_id=="AlleCampus"){
     out = c(out,  knit_child('zufriedenheit_studiengang_fern.rnw'))
   }
 }
+
+out_html <- paste(out_html , "\n </body>")
+htmlfile <- file("zufriedenheitsanalyse.html")
+write(out_html, htmlfile)
+close(htmlfile)
 
 @
 

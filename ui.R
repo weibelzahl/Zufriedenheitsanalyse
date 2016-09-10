@@ -11,6 +11,7 @@ shinyUI(fluidPage(
                'text/comma-separated-values,text/plain', 
                '.csv')
     ),
+    radioButtons('format', "Format", c("pdf"="pdf", "html (nur Kommentare)"="html"),inline = TRUE),
     selectInput('kategorie', 'Welche Studiengänge sollen einbezogen werden?', choices = list(
       Campusstudium = c(`Alle Campusstudiengänge` = 'AlleCampus', 
               "B.Sc. General Management" = 'BScGM',
@@ -42,8 +43,8 @@ shinyUI(fluidPage(
               format = "dd/mm/yyyy",
               startview = 'month', language = 'de', weekstart = 1
     ),
-    downloadButton('downloadPDF', "Erstelle PDF"),
+    downloadButton('downloadPDF', "Erstelle Auswertung"),
   hr(), 
-  p("PFH Private Hochschule Göttingen; last update 03/08/2015", align = "right")
+  p("PFH Private Hochschule Göttingen; last update 06/09/2016", align = "right")
 )))
 
